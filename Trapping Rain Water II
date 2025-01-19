@@ -1,0 +1,57 @@
+class Solution {
+    #define pip pair<int,pair<int,int>>
+
+    bool isvalid(int &a,int &b,int &m,int &n)
+    {
+        return (a>=0 and a<m and b>=0 and b<n);
+    }
+public:
+    int trapRainWater(vector<vector<int>>& heightMap) {
+        int m = heightMap.size();
+        int n = heightMap[0].size();
+        if(m<3 or n<3)
+        {
+            return 0;
+        }
+        priority_queue<pip,vector<pip>,greater<pip>>minheap;
+        vector<vector<bool>>visited(m,vector<bool>(n,false));
+        for(int i =0;i<m;i++)
+        {
+            for(int j =0;j<n;j++)
+            {
+                if(i ==0 or i==m-1 or j==0 or j==n-1)
+                {
+                    minheap.push(make_pair(heightMap[i][j],make_pair(i,j)));
+                    visited[i][j]= true;
+                }
+            }
+        }
+        int level =0;
+        int trapped_water =0;
+        vector<int> ans = {-1,0,1,0,-1};
+        while(!minheap.empty())
+        {
+            pip curr = minheap.top();
+            minheap.pop();
+            int height = curr.first;
+            int a = curr.second.first;
+            int b = curr.second.second;
+            level = max(level,height);
+            for(int i =0;i<4;i++)
+            {
+                int val_a = a+ans[i];
+                int val_b = b+ans[i+1];
+                if(isvalid(val_a,val_b,m,n) and !visited[val_a][val_b])
+                {
+                    visited[val_a][val_b] = true;
+                    minheap.push(make_pair(heightMap[val_a][val_b],make_pair(val_a,val_b)));
+                    if(heightMap[val_a][val_b]<level)
+                    {
+                        trapped_water += level-heightMap[val_a][val_b];
+                    }
+                }
+            }
+        }
+        return trapped_water;
+    }
+};
