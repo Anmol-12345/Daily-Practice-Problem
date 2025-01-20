@@ -1,0 +1,43 @@
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    int firstCompleteIndex(vector<int>& arr, vector<vector<int>>& mat) {
+        int m = mat.size();         // Number of rows in the matrix
+        int n = mat[0].size();      // Number of columns in the matrix
+        
+        // Map to store the positions of each element in the matrix
+        unordered_map<int, pair<int, int>> element_position;
+        
+        // Fill the map with the position of each element in the matrix
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                element_position[mat[i][j]] = {i, j};
+            }
+        }
+        
+        // Arrays to count the number of matched elements in each row and column
+        vector<int> rowCount(m, 0);
+        vector<int> colCount(n, 0);
+        
+        // Iterate over each element in arr
+        for (int i = 0; i < arr.size(); ++i) {
+            int num = arr[i];
+            // Get the position of the current number in the matrix
+            auto [row, col] = element_position[num];
+            
+            // Increment the row and column match counters
+            rowCount[row]++;
+            colCount[col]++;
+            
+            // If any row or column is fully matched, return the current index
+            if (rowCount[row] == n || colCount[col] == m) {
+                return i;
+            }
+        }
+        
+        return -1;  // In case no row or column is fully matched
+    }
+};
