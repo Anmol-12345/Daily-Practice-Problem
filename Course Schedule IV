@@ -1,0 +1,44 @@
+class Solution {
+public:
+bool dfs(unordered_map<int,vector<int>>&adj,int src,int dest,vector<bool>&visited)
+{
+    visited[src] = true;
+    if(src==dest)
+    {
+        return true;
+    }
+    bool isReachable = false;
+    for(auto &i:adj[src])
+    {
+        if(!visited[i])
+        {
+            isReachable = isReachable||dfs(adj,i,dest,visited);
+        }        
+    }
+    return isReachable;
+}
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+        //create graph;
+        unordered_map<int,vector<int>>adj;
+        //traversing at prerequisted at one vertex to other vertex.
+
+        for(auto&edge:prerequisites)
+        {
+            int u = edge[0];
+            int v = edge[1];
+            adj[u].push_back(v);
+        }
+        int q = queries.size();
+        vector<bool>result(q);
+        for(int i =0;i<q;i++)
+        {
+            //it define source
+            int u = queries[i][0];
+            //it define destination
+            int v = queries[i][1];
+            vector<bool>visited(numCourses,false);
+            result[i] = dfs(adj,u,v,visited);
+        }
+        return result;
+    }
+};
