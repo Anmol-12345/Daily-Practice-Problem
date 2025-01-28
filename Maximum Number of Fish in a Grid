@@ -1,0 +1,37 @@
+class Solution {
+public:
+//int m,n;
+vector<vector<int>>direction = {{-1,0},{1,0},{0,-1},{0,1}};
+int dfs(int i,int j,vector<vector<int>>&grid,int n,int m)
+{
+    if(i<0 || i>=n||j<0||j>=m||grid[i][j]==0)
+    {
+        return 0;
+    }
+    int fishcount = grid[i][j];
+    grid[i][j] =0;
+    for(vector<int>&dir: direction)
+    {
+        int i_ = i+dir[0];
+        int j_ = j+dir[1];
+        fishcount += dfs(i_,j_,grid,n,m); 
+    }
+    return fishcount;
+}
+    int findMaxFish(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        int maxfish =0;
+        for(int i =0;i<n;i++)
+        {
+            for(int j = 0;j<m;j++)
+            {
+                if(grid[i][j]>0)//water cell found
+                {
+                    maxfish = max(maxfish,dfs(i,j,grid,n,m));
+                }
+            }
+        }
+        return maxfish;
+    }
+};
